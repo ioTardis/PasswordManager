@@ -17,10 +17,23 @@ public:
 
 public slots:
     void recieveMessage(QString fileNameGet);
-    void recieveMessage2(QString fileNameGet2);
 
 private slots:
     void on_pushButton_9_clicked();
+
+    void on_NameEdit_textChanged(const QString &arg1);
+
+    void on_SourceEdit_textChanged(const QString &arg1);
+
+    void on_LoginEdit_textChanged(const QString &arg1);
+
+    void on_NoteEdit_textChanged(const QString &arg1);
+
+    void on_SaveButton_clicked();
+
+    void on_CleanButton_clicked();
+
+    void on_PasswordEdit_textChanged(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;

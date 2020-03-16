@@ -97,6 +97,19 @@
     <string>Отмена</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="BackButton">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>220</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Назад</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -30,9 +30,14 @@ private slots:
 
     void on_NextButton_clicked();
 
+    void on_BackButton_clicked();
+
 private:
     Ui::ImportDatabaseDialog *ui;
     MainWindow *main;
+
+    QString password;
+    QString importPath;
 };
 
 #endif // IMPORTDATABASEDIALOG_H

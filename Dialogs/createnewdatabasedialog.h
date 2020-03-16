@@ -32,6 +32,8 @@ private slots:
 
     void on_NextButton_clicked();
 
+    void on_BackButton_clicked();
+
 private:
     Ui::CreateNewDatabaseDialog *ui;
     MainWindow *main;

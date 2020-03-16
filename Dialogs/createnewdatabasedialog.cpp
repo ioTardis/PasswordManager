@@ -1,5 +1,6 @@
 #include "createnewdatabasedialog.h"
 #include "ui_createnewdatabasedialog.h"
+#include "choosedatabasedialog.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -68,11 +69,18 @@ void CreateNewDatabaseDialog::on_NextButton_clicked()
             {
                 file.write("Варечка ты заечка\n");
                 file.write("Пососала Варечка\n");
-                file.write("Писю мужичка.\n");
                 file.close();
                 emit sendFile(createPath);
                 close();
             } else QMessageBox::warning(0,"Ошибка", "Ошибачка с сохранением?");
         } else QMessageBox::warning(0,"Ошибка", "Куда сохранять то?");
     }
+}
+
+void CreateNewDatabaseDialog::on_BackButton_clicked()
+{
+    hide();
+    ChooseDatabaseDialog ChooseDatabase;
+    ChooseDatabase.setModal(true);
+    ChooseDatabase.exec();
 }

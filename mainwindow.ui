@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>645</width>
-    <height>630</height>
+    <width>630</width>
+    <height>633</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>278</x>
-      <y>470</y>
+      <x>280</x>
+      <y>510</y>
       <width>171</width>
       <height>31</height>
      </rect>
@@ -43,10 +43,10 @@
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>19</x>
-      <y>11</y>
+      <x>20</x>
+      <y>20</y>
       <width>251</width>
-      <height>491</height>
+      <height>521</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -82,7 +82,7 @@
       <x>280</x>
       <y>10</y>
       <width>281</width>
-      <height>451</height>
+      <height>491</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -152,7 +152,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="PasswordLabel_2"/>
+        <widget class="QLineEdit" name="PasswordEdit"/>
        </item>
       </layout>
      </item>
@@ -201,7 +201,7 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>550</y>
+      <y>560</y>
       <width>161</width>
       <height>21</height>
      </rect>
@@ -216,7 +216,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>645</width>
+     <width>630</width>
      <height>22</height>
     </rect>
    </property>
