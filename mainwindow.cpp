@@ -44,15 +44,3 @@ void MainWindow::recieveMessage(QString fileNameGet)
     qDebug() << "все заебумба";
 }
 
-void MainWindow::recieveMessage2(QString fileNameGet2)
-{
-    path = fileNameGet2;
-    QFile file(path);
-    if (file.open(QIODevice::Append | QIODevice::Text)){
-        QString pass = file.readAll();
-        file.close();
-        qDebug() << QString(pass);
-        file.close();
-    } else QMessageBox::warning(0,"Ошибка", "Ошибачка с сохранением?");
-    qDebug() << "все заебумба";
-}

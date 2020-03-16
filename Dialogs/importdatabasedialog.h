@@ -17,7 +17,7 @@ public:
     ~ImportDatabaseDialog();
 
 signals:
-    void sendFile2(QString fileNameSend2);
+    void sendFile(QString fileNameSend2);
 
 private slots:
     void on_ExitButton_clicked();

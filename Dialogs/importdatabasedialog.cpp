@@ -46,8 +46,6 @@ void ImportDatabaseDialog::on_PasswordEdit_textChanged(const QString &arg1)
 
 void ImportDatabaseDialog::on_NextButton_clicked()
 {
-    connect(this, SIGNAL(sendFile2(QString)),
-            main, SLOT(recieveMessage2(QString)));
     if (password !="")
     {
         QFile file(importPath);
@@ -61,7 +59,7 @@ void ImportDatabaseDialog::on_NextButton_clicked()
                 close();
             } else QMessageBox::warning(0,"Ошибка", "Ошибачка с открытием");
         } else QMessageBox::warning(0,"Ошибка", "А файла то и нет");
-        emit sendFile2(importPath);
+        emit sendFile(importPath);
 
     } else QMessageBox::warning(0,"Ошибка", "Пароль то введи");
 
