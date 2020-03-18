@@ -39,12 +39,12 @@ void ImportDatabaseDialog::on_PathButton_clicked()
     if (importPath != "") ui->PathEdit->setText(importPath);
 }
 
-void ImportDatabaseDialog::on_PathEdit_textChanged(const QString &arg1)
+void ImportDatabaseDialog::on_PathEdit_textChanged(const QString)
 {
     importPath = ui->PathEdit->text();
 }
 
-void ImportDatabaseDialog::on_PasswordEdit_textChanged(const QString &arg1)
+void ImportDatabaseDialog::on_PasswordEdit_textChanged(const QString)
 {
     QString check = ui->PasswordEdit->text();
     if (check !="") password = check;

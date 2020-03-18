@@ -21,19 +21,23 @@ public slots:
 private slots:
     void on_pushButton_9_clicked();
 
-    void on_NameEdit_textChanged(const QString &arg1);
+    void on_NameEdit_textChanged(const QString);
 
-    void on_SourceEdit_textChanged(const QString &arg1);
+    void on_SourceEdit_textChanged(const QString);
 
-    void on_LoginEdit_textChanged(const QString &arg1);
+    void on_LoginEdit_textChanged(const QString);
 
-    void on_NoteEdit_textChanged(const QString &arg1);
+    void on_NoteEdit_textChanged(const QString);
 
     void on_SaveButton_clicked();
 
     void on_CleanButton_clicked();
 
-    void on_PasswordEdit_textChanged(const QString &arg1);
+    void on_PasswordEdit_textChanged(const QString);
+
+    void on_CopySourceButton_clicked();
+
+    void on_CopyLoginButton_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -6,11 +6,11 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QDebug>
+#include <QClipboard>
 
 //qDebug для отображения инфы в строку
 
 QString path;
-QString zazaa;
 QString name;
 QString source;
 QString login;
@@ -41,36 +41,36 @@ void MainWindow::recieveMessage(QString fileNameGet)
 {
     path = fileNameGet;
     QFile file(path);
-    if (file.open(QIODevice::WriteOnly))
+    if (file.open(QIODevice::WriteOnly | QIODevice::Append))
     {
-        file.write("Писю мужичка.\n");
+        file.write("Вот вам и хихихаха девачки.\n");
         qDebug() << "все заебумба";
         file.close();
     } else QMessageBox::warning(0,"Ошибка", "Ошибачка с сохранением?");
 }
 
 
-void MainWindow::on_NameEdit_textChanged(const QString &arg1)
+void MainWindow::on_NameEdit_textChanged(const QString)
 {
     name = ui->NameEdit->text();
 }
 
-void MainWindow::on_SourceEdit_textChanged(const QString &arg1)
+void MainWindow::on_SourceEdit_textChanged(const QString)
 {
     source = ui->SourceEdit->text();
 }
 
-void MainWindow::on_LoginEdit_textChanged(const QString &arg1)
+void MainWindow::on_LoginEdit_textChanged(const QString)
 {
     login = ui->LoginEdit->text();
 }
 
-void MainWindow::on_PasswordEdit_textChanged(const QString &arg1)
+void MainWindow::on_PasswordEdit_textChanged(const QString)
 {
     password = ui->PasswordEdit->text();
 }
 
-void MainWindow::on_NoteEdit_textChanged(const QString &arg1)
+void MainWindow::on_NoteEdit_textChanged(const QString)
 {
     note = ui->NoteEdit->text();
 }
@@ -95,3 +95,17 @@ void MainWindow::on_CleanButton_clicked()
 }
 
 
+
+void MainWindow::on_CopySourceButton_clicked()
+{
+    source = ui->SourceEdit->text();
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(source);
+}
+
+void MainWindow::on_CopyLoginButton_clicked()
+{
+    QString login = ui->LoginEdit->text();
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(login);
+}

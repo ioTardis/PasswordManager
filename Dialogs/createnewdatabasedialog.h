@@ -24,11 +24,11 @@ private slots:
 
     void on_OpenPathButton_clicked();
 
-    void on_PathEdit_textChanged(const QString &arg1);
+    void on_PathEdit_textChanged(const QString);
 
-    void on_PasswordEdit_textChanged(const QString &arg1);
+    void on_PasswordEdit_textChanged(const QString);
 
-    void on_Password2Edit_textChanged(const QString &arg1);
+    void on_Password2Edit_textChanged(const QString);
 
     void on_NextButton_clicked();
 

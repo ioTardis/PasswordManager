@@ -38,19 +38,19 @@ void CreateNewDatabaseDialog::on_OpenPathButton_clicked()
     if (createPath != "") ui->PathEdit->setText(createPath);
 }
 
-void CreateNewDatabaseDialog::on_PathEdit_textChanged(const QString &arg1)
+void CreateNewDatabaseDialog::on_PathEdit_textChanged(const QString)
 {
     createPath = ui->PathEdit->text();
 }
 
-void CreateNewDatabaseDialog::on_PasswordEdit_textChanged(const QString &arg1)
+void CreateNewDatabaseDialog::on_PasswordEdit_textChanged(const QString)
 {
     QString check = ui->PasswordEdit->text();
     if (check !="") password1 = check;
 }
 
 
-void CreateNewDatabaseDialog::on_Password2Edit_textChanged(const QString &arg1)
+void CreateNewDatabaseDialog::on_Password2Edit_textChanged(const QString)
 {
     QString check = ui->Password2Edit->text();
     if (check !="") password2 = check;
@@ -59,7 +59,7 @@ void CreateNewDatabaseDialog::on_Password2Edit_textChanged(const QString &arg1)
 void CreateNewDatabaseDialog::on_NextButton_clicked()
 {
     QFile file(createPath);
-    if (password1 =="" | password2 =="") QMessageBox::warning(0,"Ошибка", "Пароль введи слыш");
+    if (password1 == "" || password2 == "") QMessageBox::warning(0,"Ошибка", "Пароль введи слыш");
     else
     {
         if (password1 != password2) QMessageBox::warning(0,"Ошибка", "Пароли не совпадают");
@@ -67,8 +67,8 @@ void CreateNewDatabaseDialog::on_NextButton_clicked()
         {
             if (file.open(QIODevice::WriteOnly))
             {
-                file.write("Варечка ты заечка\n");
-                file.write("Пососала Варечка\n");
+                file.write("Доброе утро девачки\n");
+                file.write("Записываем пароли девачки\n");
                 file.close();
                 emit sendFile(createPath);
                 close();

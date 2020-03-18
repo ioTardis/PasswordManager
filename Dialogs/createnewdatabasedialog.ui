@@ -19,7 +19,7 @@
      <x>20</x>
      <y>130</y>
      <width>341</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -41,7 +41,7 @@
      <x>20</x>
      <y>160</y>
      <width>341</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -89,7 +89,7 @@
      <x>20</x>
      <y>70</y>
      <width>341</width>
-     <height>25</height>
+     <height>30</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -111,16 +111,6 @@
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>200</y>
-     <width>113</width>
-     <height>20</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QPushButton" name="BackButton">
    <property name="geometry">
