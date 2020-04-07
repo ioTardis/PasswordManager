@@ -16,9 +16,6 @@ public:
     explicit ImportDatabaseDialog(QWidget *parent = nullptr);
     ~ImportDatabaseDialog();
 
-signals:
-    void sendFile(QString fileNameSend2);
-
 private slots:
     void on_ExitButton_clicked();
 

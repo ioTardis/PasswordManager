@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
+#include <QtSql>
 
 //QString password;
 //QString importPath;
@@ -16,11 +17,6 @@ ImportDatabaseDialog::ImportDatabaseDialog(QWidget *parent) :
     ui(new Ui::ImportDatabaseDialog)
 {
     ui->setupUi(this);
-
-    main = new MainWindow();
-    connect(this, SIGNAL(sendFile(QString)),
-            main, SLOT(recieveMessage(QString)));
-
 }
 
 ImportDatabaseDialog::~ImportDatabaseDialog()
@@ -35,7 +31,7 @@ void ImportDatabaseDialog::on_ExitButton_clicked()
 
 void ImportDatabaseDialog::on_PathButton_clicked()
 {
-    importPath = QFileDialog::getOpenFileName(this, "Открыть файл", "","*.txt");
+    importPath = QFileDialog::getOpenFileName(this, "Открыть файл", "","*.db");
     if (importPath != "") ui->PathEdit->setText(importPath);
 }
 
@@ -57,15 +53,11 @@ void ImportDatabaseDialog::on_NextButton_clicked()
         QFile file(importPath);
         if (importPath !="")
         {
-            if (file.open(QIODevice::ReadOnly))
-            {
-                QString info = file.readAll();
-                file.close();
-                qDebug() << QString(info);
-                close();
-            } else QMessageBox::warning(0,"Ошибка", "Ошибачка с открытием");
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+            db.setDatabaseName(importPath);
+            db.open();
         } else QMessageBox::warning(0,"Ошибка", "А файла то и нет");
-        emit sendFile(importPath);
+        close();
     } else QMessageBox::warning(0,"Ошибка", "Пароль то введи");
 
 }

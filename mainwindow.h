@@ -15,9 +15,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-public slots:
-    void recieveMessage(QString fileNameGet);
-
 private slots:
     void on_pushButton_9_clicked();
 
@@ -38,6 +35,10 @@ private slots:
     void on_CopySourceButton_clicked();
 
     void on_CopyLoginButton_clicked();
+
+    void on_CopyPasswordButton_clicked();
+
+    void on_TagEdit_textChanged(const QString);
 
 private:
     Ui::MainWindow *ui;

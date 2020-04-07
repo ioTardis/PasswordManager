@@ -16,9 +16,6 @@ public:
     explicit CreateNewDatabaseDialog(QWidget *parent = nullptr);
     ~CreateNewDatabaseDialog();
 
-signals:
-    void sendFile(QString fileNameSend);
-
 private slots:
     void on_ExitButton_clicked();
 

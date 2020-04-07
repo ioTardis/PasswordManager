@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QMessageBox>
+#include <QtSql>
 
 QString password1;
 QString password2;
@@ -15,10 +16,6 @@ CreateNewDatabaseDialog::CreateNewDatabaseDialog(QWidget *parent) :
     ui(new Ui::CreateNewDatabaseDialog)
 {
     ui->setupUi(this);
-
-    main = new MainWindow();
-    connect(this, SIGNAL(sendFile(QString)),
-            main, SLOT(recieveMessage(QString))); //Связывание слота и сигнала
 
 }
 
@@ -34,7 +31,7 @@ void CreateNewDatabaseDialog::on_ExitButton_clicked()
 
 void CreateNewDatabaseDialog::on_OpenPathButton_clicked()
 {
-    createPath = QFileDialog::getSaveFileName(this, "Сохранить файл", "","*.txt");
+    createPath = QFileDialog::getSaveFileName(this, "Сохранить файл", "","*.db");
     if (createPath != "") ui->PathEdit->setText(createPath);
 }
 
@@ -65,16 +62,26 @@ void CreateNewDatabaseDialog::on_NextButton_clicked()
         if (password1 != password2) QMessageBox::warning(0,"Ошибка", "Пароли не совпадают");
         else if (createPath !="")
         {
-            if (file.open(QIODevice::WriteOnly))
-            {
-                file.write("Доброе утро девачки\n");
-                file.write("Записываем пароли девачки\n");
-                file.close();
-                emit sendFile(createPath);
-                close();
-            } else QMessageBox::warning(0,"Ошибка", "Ошибачка с сохранением?");
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+            db.setDatabaseName(createPath);
+            db.open();
+            QSqlQuery query;
+            query.exec("CREATE TABLE passwords "
+                       "(ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                       "login VARCHAR(30), "
+                       "password VARCHAR(40), "
+                       "source VARCHAR(100), "
+                       "name TEXT, "
+                       "notes TEXT, "
+                       "tag VARCHAR(100))");
+            query.clear();
+            query.exec("INSERT INTO passwords (login, password, source, name, notes, tag)"
+                       "VALUES ('zina4ka', 'zina666', 'mail.ru', 'Ящик', 'почта', 'майлру')");
+            query.clear();
+            close();
         } else QMessageBox::warning(0,"Ошибка", "Куда сохранять то?");
     }
+
 }
 
 void CreateNewDatabaseDialog::on_BackButton_clicked()

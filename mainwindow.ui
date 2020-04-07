@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
-    <height>633</height>
+    <width>651</width>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>280</x>
-      <y>510</y>
+      <y>560</y>
       <width>171</width>
       <height>31</height>
      </rect>
@@ -76,13 +76,26 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget_3">
+   <widget class="QPushButton" name="pushButton_9">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>560</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Приветики пистолетики</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
       <x>280</x>
-      <y>10</y>
-      <width>281</width>
-      <height>491</height>
+      <y>11</y>
+      <width>351</width>
+      <height>531</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -195,20 +208,28 @@
        </item>
       </layout>
      </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_9">
+       <item>
+        <widget class="QLabel" name="TagLabel">
+         <property name="text">
+          <string>Тэги</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="TagEdit">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="frame">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
     </layout>
-   </widget>
-   <widget class="QPushButton" name="pushButton_9">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>560</y>
-      <width>161</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Приветики пистолетики</string>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -216,7 +237,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>630</width>
+     <width>651</width>
      <height>22</height>
     </rect>
    </property>
@@ -228,10 +249,19 @@
     <addaction name="ChangePasswordAction"/>
     <addaction name="ExportDatabaseAction"/>
     <addaction name="ImportDatabaseAction"/>
+    <addaction name="action_2"/>
     <addaction name="separator"/>
     <addaction name="ExitAction"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Помощь</string>
+    </property>
+    <addaction name="action"/>
+    <addaction name="separator"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="NewDatabaseAction">
@@ -257,6 +287,16 @@
   <action name="ImportDatabaseAction">
    <property name="text">
     <string>Импортировать хранилище</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Руководство пользователя</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Сменить хранилище</string>
    </property>
   </action>
  </widget>
