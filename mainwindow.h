@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "ui_mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,7 +17,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_9_clicked();
 
     void on_NameEdit_textChanged(const QString);
 
@@ -40,7 +40,23 @@ private slots:
 
     void on_TagEdit_textChanged(const QString);
 
+    void on_DeleteButton_clicked();
+
+    void on_listWidget_itemActivated(QListWidgetItem *item);
+
+    void updateQListWidget();
+
+    void on_AddButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+    QString id;
+    QString path;
+    QString name;
+    QString source;
+    QString login;
+    QString password;
+    QString note;
+    QString tag;
 };
 #endif // MAINWINDOW_H

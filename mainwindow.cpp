@@ -11,26 +11,21 @@
 
 //qDebug для отображения инфы в строку
 
-QString path;
-QString name;
-QString source;
-QString login;
-QString password;
-QString note;
-QString tag;
+int auth = 0;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    QSqlQuery query;
-    query.exec("SELECT * FROM passwords");
-    while (query.next()) {
-    QString zina = query.value(0).toString() + query.value(1).toString() + query.value(2).toString() + query.value(3).toString() + query.value(4).toString() + query.value(5).toString();
-    qDebug() << zina;
+    if (auth == 0) //Отображение диалоговых окон перед основным
+    {
+        HelloDialog hellodialog;
+        hellodialog.setModal(true);
+        hellodialog.exec();
     }
+
+    updateQListWidget();
 }
 
 MainWindow::~MainWindow()
@@ -38,56 +33,80 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::on_pushButton_9_clicked()
+void MainWindow::updateQListWidget() //Функция обновления QListWidget
 {
-    HelloDialog hellodialog;
-    hellodialog.setModal(true);
-    hellodialog.exec();
+    QSqlQuery listoutquery; //Создание переменной запроса
+    listoutquery.exec("SELECT name, id FROM passwords");
+    while(listoutquery.next()) //Перебор результатов запроса
+    {
+        auto *item = new QListWidgetItem(listoutquery.value("name").toString()); //Создание переменной с QListWidget
+        QVariant v;
+        v.setValue(listoutquery.value("id").toInt()); //Запись ID каждого поля
+        item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
+        ui->listWidget->addItem(item);//Добавление элемента в QListWidget
+        item->data(Qt::UserRole);
+    }
 }
 
-void MainWindow::on_NameEdit_textChanged(const QString)
+void MainWindow::on_SaveButton_clicked() //Функция сохранения по нажатию кнопки "Сохранить"
 {
     name = ui->NameEdit->text();
-}
-
-void MainWindow::on_SourceEdit_textChanged(const QString)
-{
     source = ui->SourceEdit->text();
-}
-
-void MainWindow::on_LoginEdit_textChanged(const QString)
-{
     login = ui->LoginEdit->text();
-}
-
-void MainWindow::on_PasswordEdit_textChanged(const QString)
-{
     password = ui->PasswordEdit->text();
-}
-
-void MainWindow::on_NoteEdit_textChanged(const QString)
-{
     note = ui->NoteEdit->text();
+    tag = ui->TagEdit->text();
+
+    QVariant v = ui->listWidget->currentItem()->data(Qt::UserRole); //Взятие ID выбранного элемента
+    int id = v.value<int>();
+    if (id == 0)
+    {
+        if (login !="" || password !="" || name !="")
+        {
+            QSqlQuery edquery;
+            edquery.prepare("INSERT INTO passwords (login, password, source, name, notes, tag)"
+                            "VALUES (? , ?, ?, ?, ?, ?)");
+            edquery.addBindValue(login); //Вставка подготовленного значения в запрос
+            edquery.addBindValue(password);
+            edquery.addBindValue(source);
+            edquery.addBindValue(name);
+            edquery.addBindValue(note);
+            edquery.addBindValue(tag);
+            edquery.addBindValue(id);
+            edquery.exec();//Выполнение запроса
+            edquery.clear();//Очистка запроса
+        }else QMessageBox::warning(0, "Ошибка", "Введите данные");
+        int queryid;
+        QSqlQuery newrecord;
+        newrecord.exec("SELECT id FROM passwords WHERE id = (SELECT MAX(id) FROM passwords)");
+        while (newrecord.next())
+        {
+            queryid = newrecord.value("id").toInt();
+        }
+
+        auto *item = ui->listWidget->currentItem(); //Создание переменной с QListWidget
+        v.setValue(queryid);
+        item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
+    }else if (login !="" || password !="" || name !="")
+    {
+        QSqlQuery edquery;
+        edquery.prepare("UPDATE passwords SET login = ?, password = ?, source = ?, name = ?, notes = ?, tag = ?  WHERE id = ?");
+        edquery.addBindValue(login); //Вставка подготовленного значения в запрос
+        edquery.addBindValue(password);
+        edquery.addBindValue(source);
+        edquery.addBindValue(name);
+        edquery.addBindValue(note);
+        edquery.addBindValue(tag);
+        edquery.addBindValue(id);
+        edquery.exec();//Выполнение запроса
+        edquery.clear();//Очистка запроса
+    } else QMessageBox::warning(0, "Ошибка", "Введите данные");
+
+    ui->statusbar->showMessage("Изменения сохранены");
+    ui->listWidget->currentItem()->setText(name);
 }
 
-void MainWindow::on_SaveButton_clicked()
-{
-    QSqlQuery edquery;
-    qDebug() << login + password + source + name + note + tag;
-    edquery.prepare("INSERT INTO passwords (login, password, source, name, notes, tag) "
-                 "VALUES (:login, :password, :source, :name, :notes, :tag)");
-    edquery.bindValue(":login", login);
-    edquery.bindValue(":password", password);
-    edquery.bindValue(":source", source);
-    edquery.bindValue(":name", name);
-    edquery.bindValue(":notes", note);
-    edquery.bindValue(":tag", tag);
-    edquery.exec();
-    edquery.clear();
-}
-
-void MainWindow::on_CleanButton_clicked()
+void MainWindow::on_CleanButton_clicked() //Функция очищения полей по нажатию кнопки "Очистить"
 {
     name = "";
     source = "";
@@ -103,30 +122,76 @@ void MainWindow::on_CleanButton_clicked()
     ui->TagEdit->setText("");
 }
 
-
-
-void MainWindow::on_CopySourceButton_clicked()
+void MainWindow::on_CopySourceButton_clicked() //Функция копирования URL-источника в буфер обмена ОС
 {
     source = ui->SourceEdit->text();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(source);
 }
 
-void MainWindow::on_CopyLoginButton_clicked()
+void MainWindow::on_CopyLoginButton_clicked()//Функция копирования логина в буфер обмена ОС
 {
     login = ui->LoginEdit->text();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(login);
 }
 
-void MainWindow::on_CopyPasswordButton_clicked()
+void MainWindow::on_CopyPasswordButton_clicked()//Функция копирования пароля в буфер обмена ОС
 {
     password = ui->PasswordEdit->text();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(password);
 }
 
-void MainWindow::on_TagEdit_textChanged(const QString)
+void MainWindow::on_DeleteButton_clicked()//Функция удаления записи из БД
 {
-    tag = ui->TagEdit->text();
+    QVariant v = ui->listWidget->currentItem()->data(Qt::UserRole);
+    int id = v.value<int>();
+
+    QSqlQuery deletequery;
+    deletequery.prepare("DELETE FROM passwords WHERE id = ?");
+    deletequery.addBindValue(id);
+    deletequery.exec();
+
+    delete ui->listWidget->currentItem();
+    on_CleanButton_clicked();
+}
+
+void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item) //Функция открытия записи по активации элемента в QListWidget
+{
+    QVariant v = ui->listWidget->currentItem()->data(Qt::UserRole);
+    int id = v.value<int>();
+
+    QSqlQuery outquery;
+    outquery.prepare("SELECT * FROM passwords WHERE id = ?");
+    outquery.addBindValue(id);
+    outquery.exec();
+    while (outquery.next())
+    {
+        ui->NameEdit->setText(outquery.value("name").toString());
+        ui->SourceEdit->setText(outquery.value("source").toString());
+        ui->LoginEdit->setText(outquery.value("login").toString());
+        ui->PasswordEdit->setText(outquery.value("password").toString());
+        ui->NoteEdit->setText(outquery.value("notes").toString());
+        ui->TagEdit->setText(outquery.value("tag").toString());
+
+        name = outquery.value("name").toString();
+        source = outquery.value("source").toString();
+        login = outquery.value("login").toString();
+        password = outquery.value("password").toString();
+        note = outquery.value("notes").toString();
+        tag = outquery.value("tag").toString();
+    }
+}
+
+void MainWindow::on_AddButton_clicked() //Функция добавления новой записи
+{
+    auto *item = new QListWidgetItem("Новая запись"); //Создание переменной с QListWidget
+    QVariant v;
+    v.setValue(0);
+    item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
+    ui->listWidget->addItem(item);//Добавление элемента в QListWidget
+    item->data(Qt::UserRole);
+
+    on_CleanButton_clicked();
 }
