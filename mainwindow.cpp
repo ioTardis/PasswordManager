@@ -195,3 +195,16 @@ void MainWindow::on_AddButton_clicked() //Функция добавления н
 
     on_CleanButton_clicked();
 }
+
+void MainWindow::on_ShowPasswordButton_clicked()//Функция отображения скрытого пароля
+{
+    if (ui->PasswordEdit->echoMode() == QLineEdit::Password)
+    {
+        ui->PasswordEdit->setEchoMode(QLineEdit::Normal);
+        ui->ShowPasswordButton->setChecked(true);
+    } else
+    {
+        ui->PasswordEdit->setEchoMode(QLineEdit::Password);
+        ui->ShowPasswordButton->setChecked(false);
+    }
+}

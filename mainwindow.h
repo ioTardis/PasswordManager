@@ -18,27 +18,15 @@ public:
 
 private slots:
 
-    void on_NameEdit_textChanged(const QString);
-
-    void on_SourceEdit_textChanged(const QString);
-
-    void on_LoginEdit_textChanged(const QString);
-
-    void on_NoteEdit_textChanged(const QString);
-
     void on_SaveButton_clicked();
 
     void on_CleanButton_clicked();
-
-    void on_PasswordEdit_textChanged(const QString);
 
     void on_CopySourceButton_clicked();
 
     void on_CopyLoginButton_clicked();
 
     void on_CopyPasswordButton_clicked();
-
-    void on_TagEdit_textChanged(const QString);
 
     void on_DeleteButton_clicked();
 
@@ -47,6 +35,8 @@ private slots:
     void updateQListWidget();
 
     void on_AddButton_clicked();
+
+    void on_ShowPasswordButton_clicked();
 
 private:
     Ui::MainWindow *ui;
