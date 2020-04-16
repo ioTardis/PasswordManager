@@ -16,6 +16,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void recieveMessage(QString getPath, int getAuth);
+
 private slots:
 
     void on_SaveButton_clicked();

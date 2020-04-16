@@ -9,14 +9,16 @@
 #include <QMessageBox>
 #include <QtSql>
 
-//QString password;
-//QString importPath;
 
 ImportDatabaseDialog::ImportDatabaseDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ImportDatabaseDialog)
 {
     ui->setupUi(this);
+
+    MainWindow *main = new MainWindow();
+    connect(this, SIGNAL(sendPath(QString, int)),
+            main, SLOT(recieveMessage(QString, int)));
 }
 
 ImportDatabaseDialog::~ImportDatabaseDialog()
@@ -57,6 +59,7 @@ void ImportDatabaseDialog::on_NextButton_clicked() //Функция, откры�
             db.setDatabaseName(importPath);//Подключение к БД
             db.open();//Открытие БД
         } else QMessageBox::warning(0,"Ошибка", "А файла то и нет");
+        emit sendPath(importPath, 1);
         close();//Закрытие диалогового окна
     } else QMessageBox::warning(0,"Ошибка", "Пароль то введи");
 

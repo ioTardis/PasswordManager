@@ -18,19 +18,47 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QSettings settings("settings.conf", QSettings::IniFormat);
+    settings.beginGroup( "Database" );
+    path = settings.value( "Path", "" ).toString();
+    settings.endGroup();
+    if (path != "")
+    {
+        auth = 1;
+        QFile file(path);
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//Подключение драйвера БД
+        db.setDatabaseName(path);//Подключение к БД
+        db.open();//Открытие БД
+    } else QMessageBox::warning(0,"Ошибка", "А файла то и нет");
+
     if (auth == 0) //Отображение диалоговых окон перед основным
     {
+        auth = 1;
         HelloDialog hellodialog;
         hellodialog.setModal(true);
         hellodialog.exec();
     }
-
-    updateQListWidget();
+    if (auth == 1)
+    {
+        updateQListWidget();
+    }
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::recieveMessage(QString getPath, int getAuth)
+{
+    path = getPath;
+    auth = 1;
+
+    QSettings settings("settings.conf", QSettings::IniFormat);
+    settings.beginGroup("Database");
+    settings.setValue("Path", path);
+    settings.endGroup();
 }
 
 void MainWindow::updateQListWidget() //Функция обновления QListWidget

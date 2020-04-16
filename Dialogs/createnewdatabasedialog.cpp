@@ -17,6 +17,9 @@ CreateNewDatabaseDialog::CreateNewDatabaseDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    MainWindow *main = new MainWindow();
+    connect(this, SIGNAL(sendPath(QString, int)),
+            main, SLOT(recieveMessage(QString, int)));
 }
 
 CreateNewDatabaseDialog::~CreateNewDatabaseDialog()
@@ -75,6 +78,7 @@ void CreateNewDatabaseDialog::on_NextButton_clicked() //Функция, созд
                        "notes TEXT, "
                        "tag VARCHAR(100))"); //Выполнение SQL-запроса с созданием новой таблицы в БД
             query.clear();//Очистка запроса
+            emit sendPath(createPath, 1);
             close();//Закрытие диалогового окна
         } else QMessageBox::warning(0,"Ошибка", "Куда сохранять то?");
     }

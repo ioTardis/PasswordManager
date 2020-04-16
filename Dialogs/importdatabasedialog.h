@@ -16,6 +16,9 @@ public:
     explicit ImportDatabaseDialog(QWidget *parent = nullptr);
     ~ImportDatabaseDialog();
 
+signals:
+    void sendPath(QString DBPath, int auth);
+
 private slots:
     void on_ExitButton_clicked();
 
