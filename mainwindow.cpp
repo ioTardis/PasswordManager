@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "Dialogs/hellodialog.h"
+#include "Dialogs/opendatabasedialog.h"
+#include "Dialogs/importdatabasedialog.h"
+#include "Dialogs/createnewdatabasedialog.h"
+#include "Dialogs/exportdatabasedialog.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -17,20 +21,17 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-
     QSettings settings("settings.conf", QSettings::IniFormat);
     settings.beginGroup( "Database" );
     path = settings.value( "Path", "" ).toString();
     settings.endGroup();
     if (path != "")
     {
-        auth = 1;
-        QFile file(path);
-        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//Подключение драйвера БД
-        db.setDatabaseName(path);//Подключение к БД
-        db.open();//Открытие БД
-    } else QMessageBox::warning(0,"Ошибка", "А файла то и нет");
+        opendatabasedialog opendatabasedialog;
+        opendatabasedialog.setModal(true);
+        opendatabasedialog.exec();
+        recieveMessage(path, auth);
+    }
 
     if (auth == 0) //Отображение диалоговых окон перед основным
     {
@@ -38,9 +39,12 @@ MainWindow::MainWindow(QWidget *parent)
         HelloDialog hellodialog;
         hellodialog.setModal(true);
         hellodialog.exec();
+        recieveMessage(path, auth);
     }
+
     if (auth == 1)
     {
+        ui->setupUi(this);
         updateQListWidget();
     }
 }
@@ -100,9 +104,11 @@ void MainWindow::on_SaveButton_clicked() //Функция сохранения �
             edquery.addBindValue(name);
             edquery.addBindValue(note);
             edquery.addBindValue(tag);
-            edquery.addBindValue(id);
             edquery.exec();//Выполнение запроса
             edquery.clear();//Очистка запроса
+
+            ui->listWidget->currentItem()->setText(name);
+            ui->statusbar->showMessage("Изменения сохранены");
         }else QMessageBox::warning(0, "Ошибка", "Введите данные");
         int queryid;
         QSqlQuery newrecord;
@@ -125,13 +131,12 @@ void MainWindow::on_SaveButton_clicked() //Функция сохранения �
         edquery.addBindValue(name);
         edquery.addBindValue(note);
         edquery.addBindValue(tag);
-        edquery.addBindValue(id);
         edquery.exec();//Выполнение запроса
         edquery.clear();//Очистка запроса
-    } else QMessageBox::warning(0, "Ошибка", "Введите данные");
 
-    ui->statusbar->showMessage("Изменения сохранены");
-    ui->listWidget->currentItem()->setText(name);
+        ui->listWidget->currentItem()->setText(name);
+        ui->statusbar->showMessage("Изменения сохранены");
+    } else QMessageBox::warning(0, "Ошибка", "Введите данные");
 }
 
 void MainWindow::on_CleanButton_clicked() //Функция очищения полей по нажатию кнопки "Очистить"
@@ -187,6 +192,7 @@ void MainWindow::on_DeleteButton_clicked()//Функция удаления за
 
 void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item) //Функция открытия записи по активации элемента в QListWidget
 {
+    on_CleanButton_clicked();
     QVariant v = ui->listWidget->currentItem()->data(Qt::UserRole);
     int id = v.value<int>();
 
@@ -214,12 +220,18 @@ void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item) //Функц
 
 void MainWindow::on_AddButton_clicked() //Функция добавления новой записи
 {
-    auto *item = new QListWidgetItem("Новая запись"); //Создание переменной с QListWidget
-    QVariant v;
-    v.setValue(0);
-    item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
-    ui->listWidget->addItem(item);//Добавление элемента в QListWidget
-    item->data(Qt::UserRole);
+    QList<QListWidgetItem *> list = ui->listWidget->findItems("Новая запись", Qt::MatchExactly);
+    if (list.count() > 0)
+    {
+        QMessageBox::warning(0, "Ошибка", "Новая запись уже существует!");
+    } else {
+        auto *item = new QListWidgetItem("Новая запись"); //Создание переменной с QListWidget
+        QVariant v;
+        v.setValue(0);
+        item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
+        ui->listWidget->addItem(item);//Добавление элемента в QListWidget
+        item->data(Qt::UserRole);
+    }
 
     on_CleanButton_clicked();
 }
@@ -235,4 +247,72 @@ void MainWindow::on_ShowPasswordButton_clicked()//Функция отображ�
         ui->PasswordEdit->setEchoMode(QLineEdit::Password);
         ui->ShowPasswordButton->setChecked(false);
     }
+}
+
+void MainWindow::on_SearchEdit_textChanged(const QString &arg1)
+{
+    QString searchstring = ui->SearchEdit->text();
+    if (searchstring == "")
+    {
+        ui->listWidget->clear();
+        updateQListWidget();
+    } else {
+        searchstring = searchstring + "%";
+        ui->listWidget->clear();
+        QSqlQuery search;
+        search.prepare("SELECT * FROM passwords WHERE lower(name) LIKE lower(?)");
+        search.addBindValue(searchstring);
+        search.exec();
+        while (search.next())
+        {
+            auto *item = new QListWidgetItem(search.value("name").toString()); //Создание переменной с QListWidget
+            QVariant v;
+            v.setValue(search.value("id").toInt()); //Запись ID каждого поля
+            item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
+            ui->listWidget->addItem(item);//Добавление элемента в QListWidget
+            item->data(Qt::UserRole);
+        }
+    }
+}
+
+void MainWindow::on_NewDatabaseAction_triggered()
+{
+    QSettings settings("settings.conf", QSettings::IniFormat);
+    settings.beginGroup("Database");
+    settings.setValue("Path", "");
+    settings.endGroup();
+
+    ui->listWidget->clear();
+
+    hide();
+    CreateNewDatabaseDialog CreateNewDatabase;
+    CreateNewDatabase.setModal(true);
+    CreateNewDatabase.exec();
+    show();
+    updateQListWidget();
+}
+
+void MainWindow::on_ChangeDatabaseAction_triggered()
+{
+    QSettings settings("settings.conf", QSettings::IniFormat);
+    settings.beginGroup("Database");
+    settings.setValue("Path", "");
+    settings.endGroup();
+
+    ui->listWidget->clear();
+
+    hide();
+    ImportDatabaseDialog ImportDatabase;
+    ImportDatabase.setModal(true);
+    ImportDatabase.exec();
+    show();
+    updateQListWidget();
+    //ОТОБРАЖЕНИЕ БД СМЕНА СОЕДИНЕНИЯ
+}
+
+void MainWindow::on_ExportDatabaseAction_triggered()
+{
+    ExportDatabaseDialog ExportDatabase;
+    ExportDatabase.setModal(true);
+    ExportDatabase.exec();
 }

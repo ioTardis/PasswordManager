@@ -15,6 +15,15 @@ public:
     explicit ExportDatabaseDialog(QWidget *parent = nullptr);
     ~ExportDatabaseDialog();
 
+private slots:
+    void on_PathEdit_textChanged(const QString &arg1);
+
+    void on_PathButton_clicked();
+
+    void on_OKButton_clicked();
+
+    void on_ExitButton_clicked();
+
 private:
     Ui::ExportDatabaseDialog *ui;
 };

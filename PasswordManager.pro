@@ -23,6 +23,7 @@ SOURCES += \
     Dialogs/exportdatabasedialog.cpp \
     Dialogs/hellodialog.cpp \
     Dialogs/importdatabasedialog.cpp \
+    Dialogs/opendatabasedialog.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -33,6 +34,7 @@ HEADERS += \
     Dialogs/exportdatabasedialog.h \
     Dialogs/hellodialog.h \
     Dialogs/importdatabasedialog.h \
+    Dialogs/opendatabasedialog.h \
     mainwindow.h
 
 FORMS += \
@@ -42,6 +44,7 @@ FORMS += \
     Dialogs/exportdatabasedialog.ui \
     Dialogs/hellodialog.ui \
     Dialogs/importdatabasedialog.ui \
+    Dialogs/opendatabasedialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.

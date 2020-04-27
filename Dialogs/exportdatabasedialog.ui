@@ -92,7 +92,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="NextButton">
+  <widget class="QPushButton" name="OKButton">
    <property name="geometry">
     <rect>
      <x>230</x>

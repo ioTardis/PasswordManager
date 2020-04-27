@@ -41,6 +41,14 @@ private slots:
 
     void on_ShowPasswordButton_clicked();
 
+    void on_SearchEdit_textChanged(const QString &arg1);
+
+    void on_NewDatabaseAction_triggered();
+
+    void on_ChangeDatabaseAction_triggered();
+
+    void on_ExportDatabaseAction_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString id;

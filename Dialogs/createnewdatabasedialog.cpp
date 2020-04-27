@@ -67,7 +67,9 @@ void CreateNewDatabaseDialog::on_NextButton_clicked() //Функция, созд
         {
             QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE"); //Подключение драйвера БД
             db.setDatabaseName(createPath); //Подключение к БД
+            db.setPassword(password1);
             db.open(); //Открытие БД
+
             QSqlQuery query;
             query.exec("CREATE TABLE passwords "
                        "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "

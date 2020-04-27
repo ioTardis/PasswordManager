@@ -265,9 +265,7 @@
      <string>Файл</string>
     </property>
     <addaction name="NewDatabaseAction"/>
-    <addaction name="ChangePasswordAction"/>
     <addaction name="ExportDatabaseAction"/>
-    <addaction name="ImportDatabaseAction"/>
     <addaction name="ChangeDatabaseAction"/>
     <addaction name="separator"/>
     <addaction name="ExitAction"/>
@@ -276,7 +274,7 @@
     <property name="title">
      <string>Помощь</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="ReadMe"/>
     <addaction name="separator"/>
    </widget>
    <addaction name="menu"/>
@@ -286,11 +284,6 @@
   <action name="NewDatabaseAction">
    <property name="text">
     <string>Создать новое хранилище</string>
-   </property>
-  </action>
-  <action name="ChangePasswordAction">
-   <property name="text">
-    <string>Изменить мастер-пароль</string>
    </property>
   </action>
   <action name="ExportDatabaseAction">
@@ -303,12 +296,7 @@
     <string>Выход</string>
    </property>
   </action>
-  <action name="ImportDatabaseAction">
-   <property name="text">
-    <string>Импортировать хранилище</string>
-   </property>
-  </action>
-  <action name="action">
+  <action name="ReadMe">
    <property name="text">
     <string>Руководство пользователя</string>
    </property>
