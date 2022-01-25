@@ -19,19 +19,19 @@
      <x>30</x>
      <y>130</y>
      <width>341</width>
-     <height>22</height>
+     <height>28</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_5">
     <item>
      <widget class="QLabel" name="PasswordLabel">
       <property name="text">
-       <string>Пароль:</string>
+       <string>Passsword</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="PasswordEdit">
+     <widget class="QLineEdit" name="openPasswordEdit">
       <property name="echoMode">
        <enum>QLineEdit::Password</enum>
       </property>
@@ -39,13 +39,13 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>31</x>
      <y>100</y>
      <width>341</width>
-     <height>22</height>
+     <height>28</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -58,7 +58,7 @@
        </size>
       </property>
       <property name="text">
-       <string>Путь:</string>
+       <string>Path</string>
       </property>
      </widget>
     </item>
@@ -83,13 +83,13 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>240</y>
-     <width>351</width>
-     <height>31</height>
+     <width>371</width>
+     <height>33</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -110,7 +110,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Другое хранилище</string>
+         <string>Another DB</string>
         </property>
        </widget>
       </item>
@@ -124,14 +124,14 @@
       <item>
        <widget class="QPushButton" name="OKButton">
         <property name="text">
-         <string>ОК</string>
+         <string>OK</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="ExitButton">
         <property name="text">
-         <string>Отмена</string>
+         <string>Cancel</string>
         </property>
        </widget>
       </item>

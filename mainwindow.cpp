@@ -5,59 +5,59 @@
 #include "Dialogs/importdatabasedialog.h"
 #include "Dialogs/createnewdatabasedialog.h"
 #include "Dialogs/exportdatabasedialog.h"
+#include "Qt-AES/qaesencryption.h"
 
+#include <QCryptographicHash>
 #include <QFileDialog>
 #include <QFile>
 #include <QMessageBox>
-#include <QDebug>
 #include <QClipboard>
 #include <QtSql>
 
-//qDebug для отображения инфы в строку
+/*
+ * The main window of the program. Receives a signal from windows with a file path, encryption password, and authentication status.
+ * Uses an open database connection to read and write information.
+*/
 
+QString userPass;
 int auth = 0;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    //Reading the settings file
     QSettings settings("settings.conf", QSettings::IniFormat);
     settings.beginGroup( "Database" );
     path = settings.value( "Path", "" ).toString();
     settings.endGroup();
-    if (path != "")
-    {
+    if (path != "" && auth == 0) {
+        auth = 1;
         opendatabasedialog opendatabasedialog;
         opendatabasedialog.setModal(true);
         opendatabasedialog.exec();
-        recieveMessage(path, auth);
     }
 
-    if (auth == 0) //Отображение диалоговых окон перед основным
-    {
-        auth = 1;
+    if (auth == 0){  //Showing Hello dialog
         HelloDialog hellodialog;
         hellodialog.setModal(true);
         hellodialog.exec();
-        recieveMessage(path, auth);
     }
 
-    if (auth == 1)
-    {
+    if (auth == 1){
         ui->setupUi(this);
         updateQListWidget();
     }
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::recieveMessage(QString getPath, int getAuth)
-{
+void MainWindow::recieveMessage(QString getPath, QString getDBpass, int getAuth) {  //Slot for recieving the signal from windows
     path = getPath;
-    auth = 1;
+    auth = getAuth;
+    userPass = getDBpass;
 
     QSettings settings("settings.conf", QSettings::IniFormat);
     settings.beginGroup("Database");
@@ -65,23 +65,37 @@ void MainWindow::recieveMessage(QString getPath, int getAuth)
     settings.endGroup();
 }
 
-void MainWindow::updateQListWidget() //Функция обновления QListWidget
-{
-    QSqlQuery listoutquery; //Создание переменной запроса
+void MainWindow::updateQListWidget() {  //Displaying an entry list
+    QSqlQuery listoutquery;
     listoutquery.exec("SELECT name, id FROM passwords");
-    while(listoutquery.next()) //Перебор результатов запроса
-    {
-        auto *item = new QListWidgetItem(listoutquery.value("name").toString()); //Создание переменной с QListWidget
+    while(listoutquery.next()){  //Iterating through the query results
+        QString listItem = decodeData(QByteArray::fromBase64(listoutquery.value("name").toByteArray()));
+        listItem.chop(8);
+        auto *item = new QListWidgetItem(listItem); //Creating a QListWidget variable
         QVariant v;
-        v.setValue(listoutquery.value("id").toInt()); //Запись ID каждого поля
-        item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
-        ui->listWidget->addItem(item);//Добавление элемента в QListWidget
+        v.setValue(listoutquery.value("id").toInt()); //Record the ID of each field
+        item->setData(Qt::UserRole, v);//Assigning ID to QListWidget
+        ui->listWidget->addItem(item);//Adding an item to QListWidget
         item->data(Qt::UserRole);
     }
 }
 
-void MainWindow::on_SaveButton_clicked() //Функция сохранения по нажатию кнопки "Сохранить"
-{
+QByteArray MainWindow::encodeData(QString DBinput) {  //Data encryption using a user-defined password
+    QAESEncryption passEncryption(QAESEncryption::AES_128, QAESEncryption::ECB);
+    QString input = DBinput.simplified().remove(' ');
+
+    QByteArray encodedText = passEncryption.encode(input.toUtf8(), userPass.toUtf8());
+    return encodedText.toBase64();
+}
+
+QByteArray MainWindow::decodeData(QByteArray DBentry) {  //Data decryption using a user-defined password
+    QAESEncryption passEncryption(QAESEncryption::AES_128, QAESEncryption::ECB);
+
+    QByteArray decodedText = passEncryption.decode(DBentry, userPass.toUtf8());
+    return decodedText;
+}
+
+void MainWindow::on_SaveButton_clicked() {  //Saving information to the database
     name = ui->NameEdit->text();
     source = ui->SourceEdit->text();
     login = ui->LoginEdit->text();
@@ -89,58 +103,55 @@ void MainWindow::on_SaveButton_clicked() //Функция сохранения �
     note = ui->NoteEdit->text();
     tag = ui->TagEdit->text();
 
-    QVariant v = ui->listWidget->currentItem()->data(Qt::UserRole); //Взятие ID выбранного элемента
+    QVariant v = ui->listWidget->currentItem()->data(Qt::UserRole); //Taking an ID of selected element
     int id = v.value<int>();
-    if (id == 0)
-    {
-        if (login !="" || password !="" || name !="")
-        {
+    if (id == 0){
+        if (login !="" || password !="" || name !="") {
             QSqlQuery edquery;
-            edquery.prepare("INSERT INTO passwords (login, password, source, name, notes, tag)"
+            edquery.prepare("INSERT INTO passwords (login, password, source, name, note, tag)"
                             "VALUES (? , ?, ?, ?, ?, ?)");
-            edquery.addBindValue(login); //Вставка подготовленного значения в запрос
-            edquery.addBindValue(password);
+            edquery.addBindValue(encodeData(login)); //Input information to query
+            edquery.addBindValue(encodeData(password));
             edquery.addBindValue(source);
-            edquery.addBindValue(name);
-            edquery.addBindValue(note);
-            edquery.addBindValue(tag);
-            edquery.exec();//Выполнение запроса
-            edquery.clear();//Очистка запроса
+            edquery.addBindValue(encodeData(name));
+            edquery.addBindValue(encodeData(note));
+            edquery.addBindValue(encodeData(tag));
+            edquery.exec();//Query execution
+            edquery.clear();
 
             ui->listWidget->currentItem()->setText(name);
-            ui->statusbar->showMessage("Изменения сохранены");
-        }else QMessageBox::warning(0, "Ошибка", "Введите данные");
+            ui->statusbar->showMessage("Changes saved");
+        } else QMessageBox::warning(0, "Error", "Enter the data");
+
         int queryid;
         QSqlQuery newrecord;
         newrecord.exec("SELECT id FROM passwords WHERE id = (SELECT MAX(id) FROM passwords)");
-        while (newrecord.next())
-        {
+        while (newrecord.next()) {
             queryid = newrecord.value("id").toInt();
         }
 
-        auto *item = ui->listWidget->currentItem(); //Создание переменной с QListWidget
+        auto *item = ui->listWidget->currentItem();
         v.setValue(queryid);
-        item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
-    }else if (login !="" || password !="" || name !="")
-    {
+        item->setData(Qt::UserRole, v);
+    } else if (login !="" || password !="" || name !="") {
         QSqlQuery edquery;
-        edquery.prepare("UPDATE passwords SET login = ?, password = ?, source = ?, name = ?, notes = ?, tag = ?  WHERE id = ?");
-        edquery.addBindValue(login); //Вставка подготовленного значения в запрос
-        edquery.addBindValue(password);
+        edquery.prepare("UPDATE passwords SET login = ?, password = ?, source = ?, name = ?, note = ?, tag = ?  WHERE id = ?");
+        edquery.addBindValue(encodeData(login));
+        edquery.addBindValue(encodeData(password));
         edquery.addBindValue(source);
-        edquery.addBindValue(name);
-        edquery.addBindValue(note);
-        edquery.addBindValue(tag);
-        edquery.exec();//Выполнение запроса
-        edquery.clear();//Очистка запроса
+        edquery.addBindValue(encodeData(name));
+        edquery.addBindValue(encodeData(note));
+        edquery.addBindValue(encodeData(tag));
+        edquery.addBindValue(id);
+        edquery.exec();
+        edquery.clear();
 
         ui->listWidget->currentItem()->setText(name);
-        ui->statusbar->showMessage("Изменения сохранены");
-    } else QMessageBox::warning(0, "Ошибка", "Введите данные");
+        ui->statusbar->showMessage("Changes saved");
+    } else QMessageBox::warning(0, "Error", "Enter the data");
 }
 
-void MainWindow::on_CleanButton_clicked() //Функция очищения полей по нажатию кнопки "Очистить"
-{
+void MainWindow::on_CleanButton_clicked() {  //Emptying fields by clicking the "Clear" button
     name = "";
     source = "";
     login = "";
@@ -155,29 +166,25 @@ void MainWindow::on_CleanButton_clicked() //Функция очищения по
     ui->TagEdit->setText("");
 }
 
-void MainWindow::on_CopySourceButton_clicked() //Функция копирования URL-источника в буфер обмена ОС
-{
+void MainWindow::on_CopySourceButton_clicked() {
     source = ui->SourceEdit->text();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(source);
 }
 
-void MainWindow::on_CopyLoginButton_clicked()//Функция копирования логина в буфер обмена ОС
-{
+void MainWindow::on_CopyLoginButton_clicked() {
     login = ui->LoginEdit->text();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(login);
 }
 
-void MainWindow::on_CopyPasswordButton_clicked()//Функция копирования пароля в буфер обмена ОС
-{
+void MainWindow::on_CopyPasswordButton_clicked() {
     password = ui->PasswordEdit->text();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(password);
 }
 
-void MainWindow::on_DeleteButton_clicked()//Функция удаления записи из БД
-{
+void MainWindow::on_DeleteButton_clicked() {
     QVariant v = ui->listWidget->currentItem()->data(Qt::UserRole);
     int id = v.value<int>();
 
@@ -190,8 +197,7 @@ void MainWindow::on_DeleteButton_clicked()//Функция удаления за
     on_CleanButton_clicked();
 }
 
-void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item) //Функция открытия записи по активации элемента в QListWidget
-{
+void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item) {  //Open entry
     on_CleanButton_clicked();
     QVariant v = ui->listWidget->currentItem()->data(Qt::UserRole);
     int id = v.value<int>();
@@ -200,88 +206,76 @@ void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item) //Функц
     outquery.prepare("SELECT * FROM passwords WHERE id = ?");
     outquery.addBindValue(id);
     outquery.exec();
-    while (outquery.next())
-    {
-        ui->NameEdit->setText(outquery.value("name").toString());
-        ui->SourceEdit->setText(outquery.value("source").toString());
-        ui->LoginEdit->setText(outquery.value("login").toString());
-        ui->PasswordEdit->setText(outquery.value("password").toString());
-        ui->NoteEdit->setText(outquery.value("notes").toString());
-        ui->TagEdit->setText(outquery.value("tag").toString());
+    while (outquery.next()){
 
-        name = outquery.value("name").toString();
+        login = decodeData(QByteArray::fromBase64(outquery.value("login").toByteArray()));
+        password = decodeData(QByteArray::fromBase64(outquery.value("password").toByteArray()));
+        name = decodeData(QByteArray::fromBase64(outquery.value("name").toByteArray()));
+        note = decodeData(QByteArray::fromBase64(outquery.value("note").toByteArray()));
+        tag = decodeData(QByteArray::fromBase64(outquery.value("tag").toByteArray()));
         source = outquery.value("source").toString();
-        login = outquery.value("login").toString();
-        password = outquery.value("password").toString();
-        note = outquery.value("notes").toString();
-        tag = outquery.value("tag").toString();
+
+        ui->NameEdit->setText(name);
+        ui->SourceEdit->setText(source);
+        ui->LoginEdit->setText(login);
+        ui->PasswordEdit->setText(password);
+        ui->NoteEdit->setText(note);
+        ui->TagEdit->setText(tag);
     }
 }
 
-void MainWindow::on_AddButton_clicked() //Функция добавления новой записи
-{
-    QList<QListWidgetItem *> list = ui->listWidget->findItems("Новая запись", Qt::MatchExactly);
-    if (list.count() > 0)
-    {
-        QMessageBox::warning(0, "Ошибка", "Новая запись уже существует!");
+void MainWindow::on_AddButton_clicked() {
+    QList<QListWidgetItem *> list = ui->listWidget->findItems("New entry", Qt::MatchExactly);
+    if (list.count() > 0) {
+        QMessageBox::warning(0, "Error", "The new entry already exists!");
     } else {
-        auto *item = new QListWidgetItem("Новая запись"); //Создание переменной с QListWidget
+        auto *item = new QListWidgetItem("New entry");
         QVariant v;
         v.setValue(0);
-        item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
-        ui->listWidget->addItem(item);//Добавление элемента в QListWidget
+        item->setData(Qt::UserRole, v);
+        ui->listWidget->addItem(item);
         item->data(Qt::UserRole);
     }
 
     on_CleanButton_clicked();
 }
 
-void MainWindow::on_ShowPasswordButton_clicked()//Функция отображения скрытого пароля
-{
-    if (ui->PasswordEdit->echoMode() == QLineEdit::Password)
-    {
+void MainWindow::on_ShowPasswordButton_clicked() {
+    if (ui->PasswordEdit->echoMode() == QLineEdit::Password) {
         ui->PasswordEdit->setEchoMode(QLineEdit::Normal);
         ui->ShowPasswordButton->setChecked(true);
-    } else
-    {
+    } else {
         ui->PasswordEdit->setEchoMode(QLineEdit::Password);
         ui->ShowPasswordButton->setChecked(false);
     }
 }
 
-void MainWindow::on_SearchEdit_textChanged(const QString &arg1)
-{
+void MainWindow::on_SearchEdit_textChanged(const QString &arg1) {
     QString searchstring = ui->SearchEdit->text();
-    if (searchstring == "")
-    {
+    if (searchstring == "") {
         ui->listWidget->clear();
         updateQListWidget();
     } else {
+        searchstring = encodeData(searchstring);
         searchstring = searchstring + "%";
         ui->listWidget->clear();
         QSqlQuery search;
         search.prepare("SELECT * FROM passwords WHERE lower(name) LIKE lower(?)");
         search.addBindValue(searchstring);
         search.exec();
-        while (search.next())
-        {
-            auto *item = new QListWidgetItem(search.value("name").toString()); //Создание переменной с QListWidget
+        while (search.next()){
+            auto *item = new QListWidgetItem(decodeData(QByteArray::fromBase64(search.value("name").toByteArray())));
             QVariant v;
-            v.setValue(search.value("id").toInt()); //Запись ID каждого поля
-            item->setData(Qt::UserRole, v);//Присваивание QListWidget ID
-            ui->listWidget->addItem(item);//Добавление элемента в QListWidget
+            v.setValue(search.value("id").toInt());
+            item->setData(Qt::UserRole, v);
+            ui->listWidget->addItem(item);
             item->data(Qt::UserRole);
         }
     }
 }
 
-void MainWindow::on_NewDatabaseAction_triggered()
-{
-    QSettings settings("settings.conf", QSettings::IniFormat);
-    settings.beginGroup("Database");
-    settings.setValue("Path", "");
-    settings.endGroup();
-
+void MainWindow::on_NewDatabaseAction_triggered() {
+    clearSettings();
     ui->listWidget->clear();
 
     hide();
@@ -292,13 +286,8 @@ void MainWindow::on_NewDatabaseAction_triggered()
     updateQListWidget();
 }
 
-void MainWindow::on_ChangeDatabaseAction_triggered()
-{
-    QSettings settings("settings.conf", QSettings::IniFormat);
-    settings.beginGroup("Database");
-    settings.setValue("Path", "");
-    settings.endGroup();
-
+void MainWindow::on_ChangeDatabaseAction_triggered() {
+    clearSettings();
     ui->listWidget->clear();
 
     hide();
@@ -307,12 +296,23 @@ void MainWindow::on_ChangeDatabaseAction_triggered()
     ImportDatabase.exec();
     show();
     updateQListWidget();
-    //ОТОБРАЖЕНИЕ БД СМЕНА СОЕДИНЕНИЯ
 }
 
-void MainWindow::on_ExportDatabaseAction_triggered()
-{
+void MainWindow::on_ExportDatabaseAction_triggered() {
     ExportDatabaseDialog ExportDatabase;
     ExportDatabase.setModal(true);
     ExportDatabase.exec();
 }
+
+void MainWindow::clearSettings() {
+    QSettings settings("settings.conf", QSettings::IniFormat);
+    settings.beginGroup("Database");
+    settings.setValue("Path", "");
+    settings.endGroup();
+}
+
+void MainWindow::on_ExitAction_triggered() {
+    delete ui;
+    exit(0);
+}
+

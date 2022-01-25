@@ -22,7 +22,7 @@
      <rect>
       <x>290</x>
       <y>560</y>
-      <width>171</width>
+      <width>195</width>
       <height>31</height>
      </rect>
     </property>
@@ -30,14 +30,14 @@
      <item>
       <widget class="QPushButton" name="SaveButton">
        <property name="text">
-        <string>Сохранить</string>
+        <string>Save</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="CleanButton">
        <property name="text">
-        <string>Очистить</string>
+        <string>Clear</string>
        </property>
       </widget>
      </item>
@@ -58,7 +58,7 @@
        <item>
         <widget class="QLabel" name="NameLabel">
          <property name="text">
-          <string>Название</string>
+          <string>Name</string>
          </property>
         </widget>
        </item>
@@ -76,7 +76,7 @@
        <item>
         <widget class="QLabel" name="SourceLabel">
          <property name="text">
-          <string>Ссылка URl</string>
+          <string>URL</string>
          </property>
         </widget>
        </item>
@@ -92,7 +92,7 @@
      <item>
       <widget class="QPushButton" name="CopySourceButton">
        <property name="text">
-        <string>Скопировать ссылку</string>
+        <string>Copy URL</string>
        </property>
       </widget>
      </item>
@@ -101,7 +101,7 @@
        <item>
         <widget class="QLabel" name="LoginLabel">
          <property name="text">
-          <string>Логин</string>
+          <string>Login</string>
          </property>
         </widget>
        </item>
@@ -117,7 +117,7 @@
      <item>
       <widget class="QPushButton" name="CopyLoginButton">
        <property name="text">
-        <string>Скопировать</string>
+        <string>Copy</string>
        </property>
       </widget>
      </item>
@@ -126,7 +126,7 @@
        <item>
         <widget class="QLabel" name="PasswordLabel">
          <property name="text">
-          <string>Пароль</string>
+          <string>Password</string>
          </property>
         </widget>
        </item>
@@ -147,14 +147,14 @@
        <item>
         <widget class="QPushButton" name="CopyPasswordButton">
          <property name="text">
-          <string>Скопировать</string>
+          <string>Copy</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="ShowPasswordButton">
          <property name="text">
-          <string>Показать</string>
+          <string>Show</string>
          </property>
         </widget>
        </item>
@@ -165,7 +165,7 @@
        <item>
         <widget class="QLabel" name="NoteLabel">
          <property name="text">
-          <string>Заметки</string>
+          <string>Note</string>
          </property>
         </widget>
        </item>
@@ -189,7 +189,7 @@
        <item>
         <widget class="QLabel" name="TagLabel">
          <property name="text">
-          <string>Тэги</string>
+          <string>Tags</string>
          </property>
         </widget>
        </item>
@@ -235,14 +235,14 @@
        <item>
         <widget class="QPushButton" name="AddButton">
          <property name="text">
-          <string>Добавить</string>
+          <string>Add</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="DeleteButton">
          <property name="text">
-          <string>Удалить</string>
+          <string>Delete</string>
          </property>
         </widget>
        </item>
@@ -257,12 +257,12 @@
      <x>0</x>
      <y>0</y>
      <width>643</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>Файл</string>
+     <string>File</string>
     </property>
     <addaction name="NewDatabaseAction"/>
     <addaction name="ExportDatabaseAction"/>
@@ -272,7 +272,7 @@
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
-     <string>Помощь</string>
+     <string>Help</string>
     </property>
     <addaction name="ReadMe"/>
     <addaction name="separator"/>
@@ -283,27 +283,42 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="NewDatabaseAction">
    <property name="text">
-    <string>Создать новое хранилище</string>
+    <string>Create database</string>
+   </property>
+   <property name="toolTip">
+    <string>Create database</string>
    </property>
   </action>
   <action name="ExportDatabaseAction">
    <property name="text">
-    <string>Экспортировать хранилище</string>
+    <string>Export database</string>
+   </property>
+   <property name="toolTip">
+    <string>Export database</string>
    </property>
   </action>
   <action name="ExitAction">
    <property name="text">
-    <string>Выход</string>
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit</string>
    </property>
   </action>
   <action name="ReadMe">
    <property name="text">
-    <string>Руководство пользователя</string>
+    <string>ReadMe</string>
+   </property>
+   <property name="toolTip">
+    <string>ReadMe</string>
    </property>
   </action>
   <action name="ChangeDatabaseAction">
    <property name="text">
-    <string>Сменить хранилище</string>
+    <string>Change database</string>
+   </property>
+   <property name="toolTip">
+    <string>Change database</string>
    </property>
   </action>
  </widget>

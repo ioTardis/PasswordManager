@@ -19,14 +19,14 @@
      <x>20</x>
      <y>130</y>
      <width>341</width>
-     <height>24</height>
+     <height>28</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
      <widget class="QLabel" name="PasswordLabel">
       <property name="text">
-       <string>Пароль:</string>
+       <string>Password (16 characters)</string>
       </property>
      </widget>
     </item>
@@ -45,14 +45,14 @@
      <x>20</x>
      <y>160</y>
      <width>341</width>
-     <height>24</height>
+     <height>28</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3">
     <item>
      <widget class="QLabel" name="Password2Label">
       <property name="text">
-       <string>Пароль еще раз:</string>
+       <string>Password again</string>
       </property>
      </widget>
     </item>
@@ -75,7 +75,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Далее</string>
+    <string>Next</string>
    </property>
   </widget>
   <widget class="QPushButton" name="ExitButton">
@@ -88,7 +88,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Отмена</string>
+    <string>Cancel</string>
    </property>
   </widget>
   <widget class="QWidget" name="layoutWidget">
@@ -97,14 +97,14 @@
      <x>20</x>
      <y>70</y>
      <width>341</width>
-     <height>30</height>
+     <height>31</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QLabel" name="PathLabel">
       <property name="text">
-       <string>Путь:</string>
+       <string>Path</string>
       </property>
      </widget>
     </item>
@@ -130,7 +130,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Назад</string>
+    <string>Back</string>
    </property>
   </widget>
  </widget>

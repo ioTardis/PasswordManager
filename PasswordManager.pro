@@ -17,28 +17,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Dialogs/changepassworddialog.cpp \
     Dialogs/choosedatabasedialog.cpp \
     Dialogs/createnewdatabasedialog.cpp \
     Dialogs/exportdatabasedialog.cpp \
     Dialogs/hellodialog.cpp \
     Dialogs/importdatabasedialog.cpp \
     Dialogs/opendatabasedialog.cpp \
+    Qt-AES/qaesencryption.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    Dialogs/changepassworddialog.h \
     Dialogs/choosedatabasedialog.h \
     Dialogs/createnewdatabasedialog.h \
     Dialogs/exportdatabasedialog.h \
     Dialogs/hellodialog.h \
     Dialogs/importdatabasedialog.h \
     Dialogs/opendatabasedialog.h \
+    Qt-AES/qaesencryption.h \
     mainwindow.h
 
 FORMS += \
-    Dialogs/changepassworddialog.ui \
     Dialogs/choosedatabasedialog.ui \
     Dialogs/createnewdatabasedialog.ui \
     Dialogs/exportdatabasedialog.ui \

@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Выберите путь сохранения и пароль для шифрования</string>
+    <string>Select the save path and password for encryption</string>
    </property>
   </widget>
   <widget class="QPushButton" name="ExitButton">
@@ -36,7 +36,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Отмена</string>
+    <string>Cancel</string>
    </property>
   </widget>
   <widget class="QWidget" name="formLayoutWidget">
@@ -45,41 +45,48 @@
      <x>30</x>
      <y>100</y>
      <width>351</width>
-     <height>91</height>
+     <height>99</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
     <item row="0" column="0">
      <widget class="QLabel" name="PathLabel">
       <property name="text">
-       <string>Путь:</string>
+       <string>Path</string>
       </property>
      </widget>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="PasswordLabel">
       <property name="text">
-       <string>Пароль:</string>
+       <string>Password(16 characters)</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="PasswordEdit"/>
+     <widget class="QLineEdit" name="exportPasswordEdit"/>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="Password2Label">
       <property name="text">
-       <string>Пароль еще раз:</string>
+       <string>Password again</string>
       </property>
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="Password2Edit"/>
+     <widget class="QLineEdit" name="exportPasswordCheckEdit"/>
     </item>
     <item row="0" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLineEdit" name="PathEdit"/>
+       <widget class="QLineEdit" name="PathEdit">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="PathButton">
@@ -102,7 +109,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>ОК</string>
+    <string>OK</string>
    </property>
   </widget>
  </widget>

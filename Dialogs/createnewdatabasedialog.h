@@ -8,8 +8,7 @@ namespace Ui {
 class CreateNewDatabaseDialog;
 }
 
-class CreateNewDatabaseDialog : public QDialog
-{
+class CreateNewDatabaseDialog : public QDialog {
     Q_OBJECT
 
 public:
@@ -17,7 +16,7 @@ public:
     ~CreateNewDatabaseDialog();
 
 signals:
-    void sendPath(QString DBpath, int auth);
+    void sendInfo(QString DBpath, QString DBpass, int auth);
 
 private slots:
     void on_ExitButton_clicked();
@@ -37,6 +36,10 @@ private slots:
 private:
     Ui::CreateNewDatabaseDialog *ui;
     MainWindow *main;
+
+    QString createdbPassword;
+    QString createdbPasswordCheck;
+    QString createdbPath;
 };
 
 #endif // CREATENEWDATABASEDIALOG_H

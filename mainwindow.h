@@ -8,8 +8,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -17,11 +16,15 @@ public:
     ~MainWindow();
 
 public slots:
-    void recieveMessage(QString getPath, int getAuth);
+    void recieveMessage(QString getPath, QString getDBpass, int getAuth);
 
 private slots:
 
     void on_SaveButton_clicked();
+
+    QByteArray encodeData(QString DBinput);
+
+    QByteArray decodeData(QByteArray DBentry);
 
     void on_CleanButton_clicked();
 
@@ -48,6 +51,10 @@ private slots:
     void on_ChangeDatabaseAction_triggered();
 
     void on_ExportDatabaseAction_triggered();
+
+    void clearSettings();
+
+    void on_ExitAction_triggered();
 
 private:
     Ui::MainWindow *ui;

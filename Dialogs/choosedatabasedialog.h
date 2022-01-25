@@ -7,8 +7,7 @@ namespace Ui {
 class ChooseDatabaseDialog;
 }
 
-class ChooseDatabaseDialog : public QDialog
-{
+class ChooseDatabaseDialog : public QDialog {
     Q_OBJECT
 
 public:

@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Отмена</string>
+    <string>Cancel</string>
    </property>
   </widget>
   <widget class="QRadioButton" name="ExistDbRadioButton">
@@ -36,7 +36,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Открыть существующее хранилище</string>
+    <string>Open an existing database</string>
    </property>
   </widget>
   <widget class="QRadioButton" name="NewDbRadioButton">
@@ -49,7 +49,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Создать новое хранилище</string>
+    <string>Create database</string>
    </property>
   </widget>
   <widget class="QPushButton" name="NextButton">
@@ -62,7 +62,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Далее</string>
+    <string>Next</string>
    </property>
   </widget>
  </widget>
